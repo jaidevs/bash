@@ -1,0 +1,85 @@
+#!/bin/bash
+echo
+echo
+echo
+### Partition Check ####
+count=0
+for i in 2 3 4 5 6 7 8 
+do
+j=`df -kh | awk NR==$i | awk -F ' ' '{print $5}'|awk  -F '%' '{print $1}'`
+if [ "$j" -le 80 ]
+then 
+count=$((count+1))
+fi
+done
+if [ $count == 7 ]
+then
+tput setaf 2;echo "1) Partition Size is OK" ;tput setaf 7;
+else
+tput setaf 1;echo "1) Please check Partition Size"; tput setaf 7;
+fi
+
+
+### Memory Check ###
+i=`free -g | awk NR==2 | awk -F ' ' '{print $3}'`
+if [ $i -ge 4 ]
+then
+tput setaf 1;echo "2) Please check Memory" ; tput setaf 7;
+else
+tput setaf 2;echo "2) Memory is OK";tput setaf 7;
+fi
+
+### Coreengine check
+m=`coreengine -l | awk NR==8 | awk -F ' ' '{print $2}'`
+if [ $m == "ONLINE" ]
+then
+tput setaf 2;echo "3) Coreengine is Online";tput setaf 7;
+else
+tput setaf 1;echo "3) Please check Coreengine status";tput setaf 7;
+fi
+
+
+### Modengine check
+m=`modengine -l | awk NR==7 | awk -F ' ' '{print $2}'`
+if [ $m == "ONLINE" ]
+then
+tput setaf 2;echo "4) Modengine is Online" ; tput setaf 7;
+else
+tput setaf 1 ;echo "4) Please check Modengine status" ; tput setaf 7;
+fi
+
+
+###Deployment Check
+n=`ls -l /usr/jboss-as-7.1.1.Final/standalone/deployments/ |grep -e "undeployed|failed"|wc -l`
+m=`ls -l /usr/jboss-as-7.1.1.Final/standalone/deployments/|grep .deployed|wc -l`
+if [ $n -gt 0 ] && [ $m == 6 ]
+then
+tput setaf 1;echo "5) Please check War deployment status";tput setaf 7;
+else
+tput setaf 2; echo "5) Deployment is OK" ;tput setaf 7;
+fi
+
+### DB Status Check
+l=`onstat - | awk NR==2 | awk -F ' ' '{print $8}'`
+if [ $l == "On-Line" ]
+then
+tput setaf 2;echo "6) DB is Online" ;tput setaf 7;
+else
+tput setaf 1 ;echo "6) Please check DB Status" ; tput setaf 7;
+fi
+
+### DB Logs check
+onstat -m| grep -v -e "Maximum server connections" -e "Checkpoint Completed" -e "Checkpoint Statistics" -e "loguniq" -e "IBM" -e "Message" > /tmp/abc.txt
+
+cat /tmp/abc.txt | tr -d " \t\n\r"  > /tmp/abc1.txt
+
+if [ -s /tmp/abc1.txt ]
+then
+tput setaf 1;     echo "7) Please check DB logs" ; tput setaf 7;
+else
+tput setaf 2;     echo "7) DB logs are OK" ; tput setaf 7;
+fi
+
+
+echo
+echo

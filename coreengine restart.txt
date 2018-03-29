@@ -1,0 +1,19 @@
+#!/bin/bash
+coreengine -d all
+i=$(netstat -na | grep ESTABLISHED | wc -l)
+
+function new(){
+i=$(netstat -na | grep ESTABLISHED | wc -l)
+echo $i
+if [ $i -le 10 ]
+then
+        coreengine -s all
+return
+fi
+sleep 10
+        new
+}
+
+new
+restengine -r all
+restengine -l

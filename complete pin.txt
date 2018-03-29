@@ -1,0 +1,50 @@
+#!/bin/bash
+echo 
+read -p "batch id " batchid
+read -p "serial id "  m
+echo
+#echo "Batch id you entered is" = $batchid
+echo
+less /applogs/script/complete_pin/altech.csv | grep $batchid > /dev/null
+if [ $? -ne 0 ]
+ then
+ locate $batchid > /dev/null
+ if [ $? -ne 0 ] ;
+        then
+
+        echo "Batch Id you entered is not in server, please search by serial no. in db"
+        echo 
+        else
+        jai=`locate $batchid | head -n1` 
+        echo "Please find details below:-"
+        less $jai | grep $m > /dev/null
+        if [ $? -ne 0 ]
+        then
+        echo "$m doesn't exist in given batch id '$batchid' "
+        echo
+ 
+      else
+         less $jai | grep $m
+                echo
+                echo
+                fi
+        fi
+        else
+i=`less /applogs/script/complete_pin/altech.csv | grep $batchid | awk -F ',' '{print $1}'`
+#echo "Serial id you entered is" = $i
+echo
+
+j=`locate $i | head -n1` 
+echo "Please find details below:-"
+        less $j | grep $m > /dev/null
+        if [ $? -ne 0 ]
+        then
+        echo "$m doesn't exist in given batch id '$batchid' "
+        echo
+        else 
+        less $j | grep $m
+
+fi
+echo
+echo
+fi

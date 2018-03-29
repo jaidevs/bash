@@ -1,0 +1,1 @@
+ awk -v FS="(<amount>|</amount>)" '{print $2}'

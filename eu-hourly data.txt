@@ -1,0 +1,111 @@
+#!/bin/bash
+date=`date +%Y-%m-%d`
+echo "Please enter starting hour, format hh "
+read -p "hour " shr
+echo
+echo "Please enter ending hour, format hh "
+read -p "hour " ehr
+
+
+
+echo "set isolation dirty read ; unload to /tmp/total.txt select count(*) from mb_transaction where mbt_trans_type_id=6  and mbt_cts between '"$date" 00:00:00' and '"$date" "$ehr":59:59'" |dbaccess emcom;
+echo "set isolation dirty read ; unload to /tmp/success.txt select count(*) from mb_transaction where mbt_trans_type_id=6  and mbt_cts between '"$date" 00:00:00' and '"$date" "$ehr":59:59' and mbt_result_description='Transaction Successful';" |dbaccess emcom;
+echo "set isolation dirty read ; unload to /tmp/fail.txt select count(*) from mb_transaction where mbt_trans_type_id=6  and mbt_cts between '"$date" 00:00:00' and '"$date" "$ehr":59:59' and mbt_result_description!='Transaction Successful';" |dbaccess emcom;
+
+
+i=`cat /tmp/total.txt`
+j=`cat /tmp/success.txt`
+k=`cat /tmp/fail.txt`
+
+echo "Total BILLPAY transactions from 00:00:00 to "$ehr":59:59" > /tmp/jai.txt
+echo "Total|$i" >> /tmp/jai.txt
+echo "Success|$j" >> /tmp/jai.txt
+echo "Fail|$k" >> /tmp/jai.txt
+echo >> /tmp/jai.txt
+
+
+
+
+
+
+
+
+echo "set isolation dirty read ; unload to /tmp/total.txt select count(*) from mb_transaction where mbt_trans_type_id=6  and mbt_cts between '"$date" "$shr":00:00' and '"$date" "$ehr":59:59'" |dbaccess emcom;
+echo "set isolation dirty read ; unload to /tmp/success.txt select count(*) from mb_transaction where mbt_trans_type_id=6  and mbt_cts between '"$date" "$shr":00:00' and '"$date" "$ehr":59:59' and mbt_result_description='Transaction Successful';" |dbaccess emcom;
+echo "set isolation dirty read ; unload to /tmp/fail.txt select count(*) from mb_transaction where mbt_trans_type_id=6  and mbt_cts between '"$date" "$shr":00:00' and '"$date" "$ehr":59:59' and mbt_result_description!='Transaction Successful';" |dbaccess emcom;
+echo "set isolation dirty read ; unload to /tmp/description.txt select mbt_result_description, count(*) from mb_transaction where mbt_trans_type_id=6  and mbt_cts between '"$date" "$shr":00:00' and '"$date" "$ehr":59:59' and mbt_result_description!='Transaction Successful' group by 1;" |dbaccess emcom;
+
+i=`cat /tmp/total.txt`
+j=`cat /tmp/success.txt`
+k=`cat /tmp/fail.txt`
+
+echo "Total BILLPAY transactions from "$shr":00:00 to "$ehr":59:59" >> /tmp/jai.txt
+echo "Total|$i" >> /tmp/jai.txt
+echo "Success|$j" >> /tmp/jai.txt
+echo "Fail|$k" >> /tmp/jai.txt
+
+echo >> /tmp/jai.txt
+
+echo "Failed Result Description|Count" >> /tmp/jai.txt
+cat /tmp/description.txt >> /tmp/jai.txt
+
+
+
+
+echo >> /tmp/jai.txt
+echo >> /tmp/jai.txt
+
+
+echo "set isolation dirty read ; unload to /tmp/total.txt select count(*) from mb_transaction where mbt_cts between '"$date" 00:00:00' and '"$date" "$ehr":59:59'" |dbaccess emcom;
+echo "set isolation dirty read ; unload to /tmp/success.txt select count(*) from mb_transaction where mbt_cts between '"$date" 00:00:00' and '"$date" "$ehr":59:59' and mbt_result_description='Transaction Successful';" |dbaccess emcom;
+echo "set isolation dirty read ; unload to /tmp/fail.txt select count(*) from mb_transaction where mbt_cts between '"$date" 00:00:00' and '"$date" "$ehr":59:59' and mbt_result_description!='Transaction Successful';" |dbaccess emcom;
+
+
+i=`cat /tmp/total.txt`
+j=`cat /tmp/success.txt`
+k=`cat /tmp/fail.txt`
+
+echo "Total transactions from 00:00:00 to "$ehr":59:59" >> /tmp/jai.txt
+echo "Total|$i" >> /tmp/jai.txt
+echo "Success|$j" >> /tmp/jai.txt
+echo "Fail|$k" >> /tmp/jai.txt
+echo >> /tmp/jai.txt
+
+
+
+
+
+
+
+
+echo "set isolation dirty read ; unload to /tmp/total.txt select count(*) from mb_transaction where  mbt_cts between '"$date" "$shr":00:00' and '"$date" "$ehr":59:59'" |dbaccess emcom; 
+echo "set isolation dirty read ; unload to /tmp/success.txt select count(*) from mb_transaction where  mbt_cts between '"$date" "$shr":00:00' and '"$date" "$ehr":59:59' and mbt_result_description='Transaction Successful';" |dbaccess emcom;
+echo "set isolation dirty read ; unload to /tmp/fail.txt select count(*) from mb_transaction where  mbt_cts between '"$date" "$shr":00:00' and '"$date" "$ehr":59:59' and mbt_result_description!='Transaction Successful';" |dbaccess emcom;
+echo "set isolation dirty read ; unload to /tmp/description.txt select mbt_result_description, count(*) from mb_transaction where mbt_cts between '"$date" "$shr":00:00' and '"$date" "$ehr":59:59' and mbt_result_description!='Transaction Successful' group by 1;" |dbaccess emcom;
+
+i=`cat /tmp/total.txt`
+j=`cat /tmp/success.txt`
+k=`cat /tmp/fail.txt`
+
+echo "Total transactions from "$shr":00:00 to "$ehr":59:59" >> /tmp/jai.txt
+echo "Total|$i" >> /tmp/jai.txt
+echo "Success|$j" >> /tmp/jai.txt
+echo "Fail|$k" >> /tmp/jai.txt
+
+echo >> /tmp/jai.txt
+
+echo "Failed Result Description|Count" >> /tmp/jai.txt
+cat /tmp/description.txt >> /tmp/jai.txt
+
+
+echo "_______________________________________________________________________"
+echo "_______________________________________________________________________"
+echo "_______________________________________________________________________"
+echo "_______________________________________________________________________"
+echo "_______________________________________________________________________"
+echo "_______________________________________________________________________"
+
+echo ""cat /tmp/jai.txt" for data"
+echo
+echo
+echo

@@ -1,0 +1,8 @@
+for i in `cat input.txt`;
+
+do
+
+m=`less kwikpay_root_201608*.log | grep $i | grep "Moderator Response" | awk -F '<vendortransid>' '{print $2}' | awk -F '</vendortransid>' '{print $1}'`
+echo "$i|$m" >> /tmp/jai/data.csv
+
+done

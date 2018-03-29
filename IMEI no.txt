@@ -1,0 +1,34 @@
+#!/bin/bash
+#logfilepath=/opt/jboss-eap-6.1/standalone/log
+read -p "enter mail id " mailid
+
+#read -p "enter date of transaction" DOT
+# if (DOT = date +%Y-%m-%d)
+#then
+#echo hello
+#fi
+
+
+line1=`grep -n $mailid /opt/jboss-eap-6.1/standalone/log/server.log |head -n 1 |awk -F ":" '{print $1}'`
+line2=`grep -n $mailid /opt/jboss-eap-6.1/standalone/log/server.log |tail -n 1 |awk -F ":" '{print $1}'`
+
+
+number=`echo $line1","$line2"p"`
+sed -n  $number /opt/jboss-eap-6.1/standalone/log/server.log > /tmp/jai.txt
+
+line3=`grep -n 'KPREQUEST' /tmp/jai.txt |head -n 1 |awk -F ":" '{print $1}'`
+line4=`grep -n '/KPREQUEST' /tmp/jai.txt |head -n 1 |awk -F ":" '{print $1}'`
+
+
+number2=`echo $line3","$line4"p"`
+sed -n  $number2 /tmp/jai.txt > /tmp/jai1.txt
+
+cat /tmp/jai1.txt | awk -F ")" '{print $2}' > /tmp/jai2.txt
+
+
+IMEI=`cat /tmp/jai2.txt | grep IMEI | awk -F ">" '{ print $2 }' |awk -F "<" '{ print $1 }'`
+DEVICEOS=`cat /tmp/jai2.txt | grep DEVICEOS | awk -F ">" '{ print $2 }' |awk -F "<" '{ print $1 }'`
+
+echo "IMEI no is $IMEI"
+
+echo "DEVICEOS is $DEVICEOS"

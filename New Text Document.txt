@@ -1,0 +1,16 @@
+#!/bin/bash
+for j in `cat input.txt`;
+do
+
+i=(locate $j | head -n1)
+
+#jai1= `$i | head -n1 | awk -F "," '{print $2}'`
+#jai2= `$i | tail -n1 | awk -F "," '{print $2,$4}'`
+
+#jai1=`cat /applogs/vmslogs/Backup_PIN/MASTERSTROKE_PIN/MASTERSTROKE_100/131217195520.csv | head -n1 | awk -F "," '{print $2}'`
+#jai2=`cat /applogs/vmslogs/Backup_PIN/MASTERSTROKE_PIN/MASTERSTROKE_100/131217195520.csv | tail -n1 | awk -F "," '{print $2,$4}'`
+
+echo " $j $jai1 $jai2"
+
+
+done

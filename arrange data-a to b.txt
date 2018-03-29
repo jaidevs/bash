@@ -1,0 +1,11 @@
+#!/bin/bash
+for i  in `cat a.txt` ;
+do
+j=`grep $i b.txt`
+if [ $? -eq 0 ] 
+then 
+echo "$i|$j" >> kanhaiya.txt
+else 
+echo "$i|missing" >> kanhaiya.txt
+fi
+done

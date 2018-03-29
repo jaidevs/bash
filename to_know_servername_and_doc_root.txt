@@ -1,0 +1,22 @@
+#!/bin/bash
+#####merging###########
+ls /etc/apache2/sites-enabled/ > /tmp/ls.txt
+for lsp in `cat /tmp/ls.txt`;
+do
+cat -n /etc/apache2/sites-enabled/$lsp | grep  "<VirtualHost" |grep -v '#' | awk '{print $1}' > /tmp/jai.txt
+cat -n /etc/apache2/sites-enabled/$lsp | grep  "</VirtualHost" | grep -v '#' |awk '{print $1}' > /tmp/dev.txt
+paste -d ',' /tmp/jai.txt /tmp/dev.txt > /tmp/"$lsp".txt
+for i in `cat /tmp/"$lsp".txt`
+do 
+sed -n "$i"p /etc/apache2/sites-enabled/"$lsp" > /tmp/vh.txt
+sn=`cat /tmp/vh.txt |grep -i ServerName |grep -v '#' | awk '{print $2}'`
+dr=`cat /tmp/vh.txt |grep -i DocumentRoot| grep -v '#' | awk '{print $2}'`
+if [ -z $dr ]
+then
+echo "$sn|redirection"
+else
+echo "$sn|$dr"
+fi
+done
+done
+

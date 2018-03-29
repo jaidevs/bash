@@ -1,0 +1,11 @@
+CORE_BASE=/applogs/engine/coreengine
+CORE_ARCBASE=/applogs/archive/engine/coreengine
+
+
+
+
+cd ${CORE_BASE}; /usr/bin/find . -ctime 4 -exec bzip2 {} \;
+cd ${CORE_BASE}; /usr/bin/find . -name "*.bz2" -exec mv {} ${CORE_ARCBASE}/{} \;
+
+
+

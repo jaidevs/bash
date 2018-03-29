@@ -1,0 +1,15 @@
+#!/bin/bash
+#while true
+#do
+ps -ef | grep jboss > /tmp/new
+i=$(awk NR==2'{ print $2 }' /tmp/new)
+now=$(date +"%y-%m-%d")
+j=$(date +"%T")
+cp /usr/jboss-eap-6.0/standalone/log/server.log /usr/jboss-eap-6.0/standalone/log/server.log.$now.$j
+kill -9 $i
+jboss start
+#sleep 10800
+#done
+
+
+##no need of while loop if you put this script in CRON

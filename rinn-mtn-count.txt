@@ -1,0 +1,49 @@
+#!/bin/bash
+> /tmp/data.txt
+> /tmp/failure.txt
+echo "Hours in which Failure Percentage is greater than 25%" >> /tmp/failure.txt
+echo
+echo "Please enter date, format yyyymmdd "
+read -p "date " date
+echo
+
+echo "Please enter hours, format 00 01 02 ...n"
+read -p "hours " hours
+echo
+echo $hours > /tmp/hours.txt
+
+
+for j in `cat /tmp/ussd.txt`
+do
+echo $j >> /tmp/data.txt
+echo "Hours|Requests|Response|Success|Fail|% Failure" >> /tmp/data.txt
+
+        for i in `cat /tmp/hours.txt`
+        do
+        unset TR TRS TS FAIL
+        less /applogs/engine/ussdengine/"$j"_root_"$date"*.log | grep " 2017 $i" > /tmp/"$j"_$i.txt
+        TR=`less /tmp/"$j"_$i.txt | grep "Sending Request to Core" | wc -l`
+        TRS=`less /tmp/"$j"_$i.txt | grep "Core Response" | wc -l`
+        TS=`less /tmp/"$j"_$i.txt | grep "Core Response" | grep 'Transaction Successful' | wc -l`
+        FAIL=`less /tmp/"$j"_$i.txt | grep "Core Response" | grep -v 'Transaction Successful' | wc -l`
+        FAILURE=`echo $FAIL*100/$TR | bc`
+       if [ "$FAILURE" -gt 25 ];then
+        less /tmp/"$j"_"$i".txt | grep 'Core Response' |  awk -v FS="(<resultdescription>|</resultdescription>)" '{print $2}' > /tmp/response_""$j_"$i"
+        echo  >> /tmp/failure.txt
+        echo $j and hour is $i >> /tmp/failure.txt
+        less /tmp/response_$i |  sort | uniq -c | tr -s ' ' | awk '{for (i=2; i<NF; i++) printf $i " "; print $NF,"|"$1}'  >> /tmp/failure.txt
+        fi
+         echo "$i|$TR|$TRS|$TS|$FAIL|$FAILURE" >> /tmp/data.txt        
+        rm -rvf /tmp/"$j"_$i.txt > /dev/null
+        done
+done
+cat /tmp/data.txt
+echo
+echo
+cat /tmp/failure.txt
+rm -rvf /tmp/data.txt > /dev/null
+rm  -rvf /tmp/failure.txt > /dev/null
+rm -rvf /tmp/response_* > /dev/null
+
+echo
+echo

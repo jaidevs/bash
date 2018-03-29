@@ -1,0 +1,7 @@
+to log output and error differently:-
+cmd >>log.out 2>>log_error.out
+
+
+to log output and error in single file:-
+cmd >>file.txt 2>&1
+

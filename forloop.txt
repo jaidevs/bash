@@ -1,0 +1,4 @@
+for i in `cat input.txt`;
+do
+     grep -n $i /usr/jboss-eap-6.1/standalone/log/server.log.2016-04-01 |head -n 1 |awk -F ":" '{print $6}'| awk -F " " '{print $1}' >> /tmp/jai1/orderid
+done

@@ -1,0 +1,9 @@
+#!/bin/bash
+#date | awk -F ' ' '{print $4}' > /tmp/a.txt
+#z=`awk -F':' '{print $1-1 }' a.txt` 
+
+for i in 00 01 02
+do 
+grep "06 Nov 2016 $i" /applogs/engine/ussdengine/mtn_141_root_20161106.log > /tmp/mtn/mtn_141/mtn_$i.txt
+grep "06 Nov 2016 $i" /applogs/engine/ussdengine/mtn_139_root_20161106.log > /tmp/mtn/mtn_139/mtn_$i.txt
+done

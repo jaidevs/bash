@@ -1,0 +1,1 @@
+bzip2 server.log.2016-01-22

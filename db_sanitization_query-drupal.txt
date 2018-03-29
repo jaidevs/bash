@@ -1,0 +1,10 @@
+UPDATE users SET mail = 'test@test.com' WHERE uid <> 0;
+UPDATE users SET init = 'test@test.com' WHERE uid <> 0;
+UPDATE system SET status = 0 WHERE name LIKE '%secure%';
+UPDATE system SET status = 0 WHERE name LIKE '%googleanalytic%';
+UPDATE system SET status = 0 WHERE name LIKE '%facebook%';
+UPDATE system SET status = 0 WHERE name LIKE '%searchapi%';
+UPDATE system SET status = 0 WHERE name LIKE '%apachesolr%';
+UPDATE system SET status = 0 WHERE name LIKE '%backup%';
+UPDATE system SET status = 0 WHERE name LIKE '%migration%';
+
