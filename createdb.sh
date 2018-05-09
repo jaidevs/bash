@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 user=root             ###########DB username###############
 pass=root             ############DB password#############
 
